@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Mining: Video Game Industry Survival</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0b1120; color: #f8fafc; overflow-x: hidden; }
+        .glass-nav { background: rgba(11, 17, 32, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .gsap-reveal { opacity: 0; visibility: hidden; }
+        .img-container { overflow: hidden; border-radius: 0.75rem; border: 1px solid #1e293b; background: #0f172a; }
+        .img-container img { transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94); width: 100%; height: auto; }
+        .img-container:hover img { transform: scale(1.03); }
+        .text-gradient { background: linear-gradient(to right, #60a5fa, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body class="antialiased selection:bg-blue-500 selection:text-white">
+
+    <nav class="fixed w-full z-50 glass-nav border-b border-slate-800 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-xl font-bold tracking-tighter text-white">Project<span class="text-blue-500">ML</span></div>
+            <div class="hidden md:flex space-x-6 text-sm font-medium text-slate-300">
+                <a href="#intro" class="hover:text-white transition-colors">Introduction</a>
+                <a href="#data" class="hover:text-white transition-colors">Data Exploration</a>
+                <a href="#models" class="hover:text-white transition-colors">Models</a>
+                <a href="#conclusions" class="hover:text-white transition-colors">Conclusions</a>
+                <a href="#team" class="hover:text-white transition-colors">Team</a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="intro" class="pt-32 pb-16 px-6 max-w-7xl mx-auto">
+        <div class="gsap-hero text-center mb-16">
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
+                A Data Mining Approach for Advice on <br><span class="text-gradient">Surviving the Videogame Industry</span>
+            </h1>
+            <p class="text-xl text-slate-400 max-w-3xl mx-auto">Note: This project is a team effort! Please see the 'Team' tab for details on everyone involved!</p>
+        </div>
+
+        <div class="gsap-hero img-container mb-16 shadow-2xl shadow-blue-900/20">
+            <img src="https://www.audiovascular.com/assets/data-mining-assets/data-minining-poster.jpeg" alt="Video Game Analysis Poster">
+        </div>
+
+        <div class="prose prose-invert prose-lg max-w-4xl mx-auto space-y-6 text-slate-300 gsap-reveal">
+            <p>The video game industry is a multi-billion dollar industry, and the evaluation continues to grow each year[1]. Developments in technology have taken us from playing pong on the Atari system to virtual concerts inside of the wildly successful videogame Fortnite. Games such as the massive multiplayer online roleplaying games World of Warcraft and Guild Wars 2 allow players to play together and interact with each other in real-time when their geographical location might be thousands of miles apart. Additionally, continued development gave rise to Steam.com[2] which is now the most popular distributor of PC/desktop games. While many of these games are developed by larger companies, the development of video game engines (which allow virtually anyone to make their own game granted they have necessary skills like software development) has led to a rise in independent video game development (or indie games).</p>
+            <p>The backgrounds of indie game developers varies widely. Some have worked in large professional studios, some have degrees ranging from computer science to game design, and some are gamers that are interested in making their own video games. Skill levels, knowledge levels, and experience vary widely. It follows that some indie developers know the process of building and shipping a full game with the potential of success while others are lost without a roadmap in an already cut-throat and competitive industry. While more and more game development resources are available on the internet in the forms of written instruction and YouTube.com video content, the backgrounds and expertise of the resource creators is often unknown. Viewers must take caution with instructional content due to potential incorrectness or a lack of best practices in the advice and knowledge presented.</p>
+            <p>In the case that the source of information is from a reputable or known source, the breadth of the information shared might be limited. Take the site Steamlytics.com and their entry for the widly popular indie game Hollow Knight. Steamlytics provides a sentiment analysis and a high level overview of the overarching response to the game. Information provided for the game (and others) includes general liking for the game, aggregated pros and cons, a positive and negative word clouds, bigrams, and trigrams. While the information could be helpful to know why Hollow Knight suceeded, it is difficult to learn any specifics. It would also be overly time consuming to analyze several games such that one could investigate maybe 10 to 12 in an hour. Doing that repeatedly would be a monotonous process. Similar websites like gamalytic.com and vginsights.com provide high level information similar to Steamlytics, but the helpfulness suffers from the same lack of depth. Additionally, some information is behind a paywall, increasing the barrier of entry.</p>
+            <p>These limitations of current instructional content for video game development could be at least in part supplemented by an in-depth data-driven analysis of factors that may predict the success or failure of a new video game. Such data can be collected from Steam. Each game on Steam has associated images, trailers, music, reviews, popularity scores, etc. This data can provide insight into potential reasons for the success or failure of a given video game. It is reasonable to expect that through analyzing thousands of games (on Steam, there are over 200,000), patterns will emerge in terms of the qualities that successful games share, that moderately successful games share, and that failed games share [3],[4]. These patterns could then be interpreted to inform guidelines and instructional content related to video game development. Futhermore, the patterns could be utilized to inform game marketing strategies which is a critical part of game success.</p>
+            <p>For indie game developers, the benefit is clear. Analyzing patterns in game reviews, sound tracks, reviews, and screenshots can provide insight into shared key attributes among successful video games. This includes actual game development and design choices to marketing strategies involving screenshots and trailers. Additionally, information such as this could be interesting and useful for large game companies like Valve (the owner of Steam.com) as well as players not involved in any game development process. For players, this information could lead to further developments in recommendation systems. Any reviews that a player leaves on games could be used in a sentiment analysis to better recommend other games that he or she may enjoy. On the same logic, better recommendation systems could obviously benefit a larger company like Valve by more efficiently connecting players with content that they enjoy but do not know exists.</p>
+            
+            <h3 class="text-2xl font-bold text-white mt-12 mb-4">Questions</h3>
+            <ul class="list-disc pl-6 space-y-2">
+                <li>Do indie games tend to perform differently compared to AAA titles (ie from large professional studios) in terms of user feedback?</li>
+                <li>To what extent can we predict a game's success (as measured by reviews and ratings) based on promotional materials (description, screenshots, trailers)?</li>
+                <li>How to game trailers impact user reviews and ratings?</li>
+                <li>Do certain genres generally perform better in terms of user ratings?</li>
+                <li>How to regional preferences shape the success of specific game genres?</li>
+                <li>To what degree are the length of game trailers related to a game's user ratings?</li>
+                <li>How does social media activity influence the success of a game?</li>
+                <li>How do game reviews change over time post-release?</li>
+                <li>Are there specific genres of music commonly found in successful games?</li>
+                <li>What compositional elements in soundtracks are correlated with positive user reviews?</li>
+            </ul>
+
+            <h3 class="text-2xl font-bold text-white mt-12 mb-4">References</h3>
+            <ul class="list-disc pl-6 space-y-2">
+                <li>Newzoo Global Games Market Report 2023</li>
+                <li>Steam Store</li>
+                <li>Success Factors of Video Games: A Data-Driven Analysis</li>
+                <li>What makes a great game? Using data mining to analyze the factors affecting game success</li>
+            </ul>
+        </div>
+    </section>
+
+    <hr class="border-slate-800">
+
+    <section id="data" class="py-24 px-6 max-w-7xl mx-auto">
+        <h2 class="text-4xl font-bold mb-12 text-center gsap-reveal">Data Collection and Exploration</h2>
+        
+        <div class="max-w-4xl mx-auto space-y-8 text-slate-300 text-lg">
+            <div class="gsap-reveal">
+                <h3 class="text-2xl font-bold text-white mb-4">Data Collection</h3>
+                <p class="mb-4">The data utilized in this work comes directly from Steam via an API. There are three main API calls utilized to collect the data:</p>
+                <ul class="list-disc pl-6 space-y-2 mb-6 text-sm bg-slate-800/50 p-6 rounded-lg font-mono">
+                    <li>https://api.steampowered.com/ISteamApps/GetAppList/v2/. This is used to acquire all Steam app IDs.</li>
+                    <li>https://store.steampowered.com/api/appdetails?appids=&lt;APPID&gt;, where APPID is the steam application ID number. This is used to to collect details about a single Steam application.</li>
+                    <li>https://store.steampowered.com/appreviews/&lt;APPID&gt;?json=1&num_per_page=100&cursor=&lt;CUR&gt;&filter=recent&purchase_type=all, where CUR is a string representing the next page of reviews if there are multiple pages.</li>
+                </ul>
+                <p class="mb-4">Data from these API requests is returned in the form of JSON. An example response is below:</p>
+                <div class="img-container mb-8"><img src="https://www.audiovascular.com/assets/data-mining-assets/json-screenshot.png" alt="JSON API Response"></div>
+            </div>
+
+            <div class="gsap-reveal">
+                <h3 class="text-2xl font-bold text-white mb-4">Data Info file</h3>
+                <p class="mb-4">Part of the data cleaning process was neatly organizing the data into CSV files according to a schema. Below is an image of data with app details organized in a CSV file and an image of the schema used for organizing the data.</p>
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/info-file.png" alt="CSV Data Format"></div>
+                    <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/data-mining-database-schema.png" alt="Data Schema"></div>
+                </div>
+            </div>
+
+            <div class="gsap-reveal bg-slate-800/30 p-8 rounded-xl border border-slate-700">
+                <h3 class="text-2xl font-bold text-white mb-4">Amount of Data</h3>
+                <p class="mb-4">At the time of writing, the current data types and amounts are as follows:</p>
+                <ul class="grid grid-cols-2 gap-4 font-semibold text-blue-400">
+                    <li>Total apps (with details): 23,780</li>
+                    <li>App reviews (text): 4,189,520</li>
+                    <li>App images (as a url): 266,688</li>
+                    <li>App publishers: 12,866</li>
+                    <li>App developers: 14,687</li>
+                    <li>App trailers (as a url): 25,584</li>
+                </ul>
+            </div>
+
+            <div class="gsap-reveal">
+                <h3 class="text-2xl font-bold text-white mt-12 mb-4">Data Cleaning</h3>
+                <p class="mb-4">Formatting the data into csv files in this manner effectively cleans every column except for the description column. In that column, HTML tags are present as well as other non-text characters. The HTML tags are filtered out, and the description for any game that does not provide a coherent description is set to an empty string. Removing entire row is avoided because of the other useful information and since not all analyses are dependent of the description.</p>
+                <p class="mb-4">The descriptions and reviews are transformed into transaction format for later analysis as another stage of cleaning. Below is an image of review data in transaction format.</p>
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/review-transaction-format.png" alt="Transaction Format Data"></div>
+            </div>
+
+            <div class="gsap-reveal">
+                <h3 class="text-2xl font-bold text-white mt-16 mb-8 border-b border-slate-700 pb-2">Data Visualizations</h3>
+                <p class="mb-8">The visualizations below show initial insight into the data. Below each is a caption describing them.</p>
+
+                <div class="space-y-16">
+                    <div>
+                        <div class="img-container mb-4"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/tableau%20graphs/Bottom%20developers/Bottom%20devs.png" alt="Negative Devs"></div>
+                        <p class="text-sm text-slate-400 italic">The x axis is the top 10 most negatively review game developers and y axis is the total positive and negative reviews. We can see that rare ltd and DICE are the two most negatively reviewed game developers and that most developers have almost nearly equal positive reviews as well.</p>
+                    </div>
+                    <div>
+                        <div class="img-container mb-4"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/tableau%20graphs/Bottom%20Publishers/Bottom%20pubs.png" alt="Negative Pubs"></div>
+                        <p class="text-sm text-slate-400 italic">This graph displays the top 10 most negatively reviewed game publishers and the number of positive (green) reviews and negative (red) reviews they get. We can observe that electronic arts has the most negative reviews as well, and that most of these publishers have comparable number of positive reviews to the negative reviews. Implying that people tend to have mixed opinions on game publisher games.</p>
+                    </div>
+                    <div>
+                        <div class="img-container mb-4"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/tableau%20graphs/Bubbleplot/Bubbleplot%20-%20price%20vs%20review%20sentiment.png" alt="Bubble Plot"></div>
+                        <p class="text-sm text-slate-400 italic">The bubble plot shows the price vs review sentiment (which is the ratio of positive and negative reviews). The bubble size denotes the value of review sentiment (larger bubble implies positive review). While the colour denotes the price, more red implies more pricey game. We can observe that more pricey games tend to have more positive review sentiment, and vice versa. Which can be confirmed as less pricey games tend to be made by cheaper indie game developers who cannot make the best of games.</p>
+                    </div>
+                    <div>
+                        <div class="img-container mb-4"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/tableau%20graphs/Piechart/Piechart%20-%20App%20type%20vs%20Number%20of%20games.png" alt="App Type Pie Chart"></div>
+                        <p class="text-sm text-slate-400 italic">The pie chart shows the app types like game, demo, dlc, etc vs the total number of games. We can observe that the game app type is most common followed by dlc and music.</p>
+                    </div>
+                    <div>
+                        <div class="img-container mb-4"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/tableau%20graphs/Scatterplot/Scatterplot%20-%20Price%20vs%20Reviews.png" alt="Price vs Reviews Scatterplot"></div>
+                        <p class="text-sm text-slate-400 italic">The graph plots total number of reviews for each price range of each game. Red are net negatively reviewed games and green and net positively reviewed games. We have removed outliers to make the graph more digestible. We can see that most games are positively reviewed, only a few are negatively reviewed. This mean the data is more skewed towards positive reviews. We can also observe that the data is more concentrated towards the left end, meaning games tend to be less pricey. But on the y axis the total reviews are quite equally spread apart, meaning there is no visible trend with games and number of reviews.</p>
+                    </div>
+                    <div>
+                        <div class="img-container mb-4"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/tableau%20graphs/Top%2010%20Devs/TOP%2010%20DEVs.png" alt="Top 10 Devs Positive"></div>
+                        <p class="text-sm text-slate-400 italic">X axis is the top 10 game developers based on positive user reviews. Y axis is the total reviews received by each developer. We can see that capcom co has the highest reviews and is followed by dice , but there is a huge difference between the two. We can see that BioWare is the most positively reviewed developer.</p>
+                    </div>
+                    <div>
+                        <div class="img-container mb-4"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/tableau%20graphs/Top%2010%20Publishers/Top%2010%20PUBs.png" alt="Top 10 Publishers Positive"></div>
+                        <p class="text-sm text-slate-400 italic">X axis has the names of the top 10 publisher names, which were found using the most positive reviews. Y axis has the total number of reviews. This graph shows the top 10 publisher names, and that electronic arts has the highest number of reviews, and arc system works has the highest number of positive reviews.</p>
+                    </div>
+                    <div>
+                        <div class="img-container mb-4"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/Python%20graphs/Top%205%20genre/Top%205%20genre.jpeg" alt="Top 5 Genres"></div>
+                        <p class="text-sm text-slate-400 italic">X axis has the names of the top 5 game genres, which were found using the most positive reviews. Y axis has the total number of reviews. This graph shows the top 5 genre names, and that action is the most liked game genre and these have very little negative reviews.</p>
+                    </div>
+                    <div>
+                        <div class="img-container mb-4"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/histogram-review-lengths.png" alt="Words in Review Histogram"></div>
+                        <p class="text-sm text-slate-400 italic">The x axis shows the number of words in a review and the y axis shows how many reviews had that many words. Perhaps unsurprisingly, words with fewer words are more common while reviews with more words are less common.</p>
+                    </div>
+                    <div>
+                        <div class="img-container mb-4"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/numwords-vs-gameplay-time.png" alt="Playtime vs Words Scatter"></div>
+                        <p class="text-sm text-slate-400 italic">This plot shows the number of words in a review plottted against how long someone had played the game before leaviing a review. Intuitively, one may believe that longer, more indepth reviews would come from people who have played the game longer. However this is not the case. Longer reviews typically come from people with a shorter amount of playtime. This could present interesting ideas for analysis later on.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="border-slate-800">
+
+    <section id="models" class="py-24 px-6 max-w-7xl mx-auto">
+        <h2 class="text-4xl font-bold mb-12 text-center gsap-reveal">Models Implemented</h2>
+        <p class="text-lg text-slate-300 text-center max-w-3xl mx-auto mb-16 gsap-reveal">In order to model the data, we took a few different approaches and utilized a combination of unsupervised and supervised methods.</p>
+
+        <div class="gsap-reveal mb-24">
+            <h3 class="text-3xl font-bold text-blue-400 mb-6">Association Rule Mining</h3>
+            <div class="prose prose-invert max-w-none text-slate-300 mb-8">
+                <p>We applied association rule mining to the reviews of the games. We looked at Steam Apps that were classified as a "game" (in other words, we didn't look at DLC or other non-game Steam Apps), and we looked at differences among the top 10 genres. We filtered game reviews by the ratio of positive reviews to negative reviews of a game. If a game had more positive reviews than negative, it was considered a positive and vice versa. We acknowledge that this is not the best method, especially considering Steam reviews are tagged as either positive or negative. A bug in code caused that review tag to not be collected. Grouping reviews by how positively overall the game they are associated with is the best approximation.</p>
+                <p>ARM requires transaction data. To create the transaction data, we first extracted the necessary reviews according to liked and disliked games and genre. We removed any line break characters, removed capital letters, punctuation, numbers, non-latin characters, duplicate words, and a set of words (such as "game", "ever", "it", "etc") that provide no meaning. Afterwards, we saved the cleaned words as basket data. The two images below show messy data (top) and clean data (right).</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6 mb-12 max-w-5xl mx-auto">
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/raw-arm-text.png" alt="ARM Raw Data"></div>
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/transaction-data-for-arm.png" alt="ARM Clean Data"></div>
+            </div>
+
+            <h4 class="text-2xl font-semibold text-white mb-6">Positive Reviews</h4>
+            <p class="text-slate-300 mb-6">Using thresholds of 0.01 and 0.4 for support and confidence, respectively, we generated the following plots that describe the found association rules.</p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/liked-action.png" alt="Liked Action"></div>
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/liked-adventure.png" alt="Liked Adventure"></div>
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/liked-casual.png" alt="Liked Casual"></div>
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/liked-indie.png" alt="Liked Indie"></div>
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/liked-multiplayer.png" alt="Liked Multiplayer"></div>
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/liked-racing.png" alt="Liked Racing"></div>
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/liked-rpg.png" alt="Liked RPG"></div>
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/liked-simulation.png" alt="Liked Simulation"></div>
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/liked-sports.png" alt="Liked Sports"></div>
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/liked-strategy.png" alt="Liked Strategy"></div>
+            </div>
+
+            <div class="bg-slate-800/50 p-6 rounded-lg mb-12">
+                <p class="text-slate-300 mb-2">From this, we draw two separate interpretations:</p>
+                <ol class="list-decimal pl-6 space-y-2 text-slate-300">
+                    <li>A quality game allows the player on the story and the overall message of a game. Art, music, and game mechanics all seamlessly work together to create an experience rather than any one of those removing the player from the flow of the game.</li>
+                    <li>Story is a potential driving factor in a quality game. Without a good story, the game will suffer.</li>
+                </ol>
+            </div>
+
+            <h4 class="text-2xl font-semibold text-white mb-6">Negative Reviews</h4>
+            <p class="text-slate-300 mb-6">Assocation plots for reviews for mostly negative games were also created using support and confidence thresholds of 0.02 and 0.55, respectively.</p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/disliked-action.png" alt="Disliked Action"></div>
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/disliked-adventure.png" alt="Disliked Adventure"></div>
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/disliked-casual.png" alt="Disliked Casual"></div>
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/disliked-indie.png" alt="Disliked Indie"></div>
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/disliked-multiplayer.png" alt="Disliked Multiplayer"></div>
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/disliked-racing.png" alt="Disliked Racing"></div>
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/disliked-rpg.png" alt="Disliked RPG"></div>
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/disliked-simulation.png" alt="Disliked Simulation"></div>
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/disliked-sports.png" alt="Disliked Sports"></div>
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/disliked-strategy.png" alt="Disliked Strategy"></div>
+            </div>
+            <p class="text-slate-300">Negative review are much more scattered about. While RPGs center around story (which in this case might indicate a bad story) to a degree, the other plots are less centralized around a common theme which could indicate that some elements of a game could be good, but one bad element of a game can ruin the whole thing.</p>
+        </div>
+
+        <div class="gsap-reveal mb-24 border-t border-slate-800 pt-16">
+            <h3 class="text-3xl font-bold text-blue-400 mb-6">CLIP</h3>
+            
+            <h4 class="text-xl font-bold text-white mb-2">Model Explanation</h4>
+            <p class="text-slate-300 mb-6">CLIP is a multimodal model, proposed by OpenAI, that aligns textual and image embeddings into a joint space. It was trained to predict which caption fits best for an image among candidates, allowing it to learn associations of visual and textual data. Trained on diverse image-text pairs, CLIP can execute tasks such as image classification, retrieval, and zero-shot learning without fine-tuning specifically for individual tasks. Using a dual encoder architecture, it processes images through a vision model-e.g., ResNet or ViT-and processes text using a transformer to produce embeddings to be compared. Such flexibility and generalization make CLIP a very powerful model for different visual-linguistic applications.</p>
+            
+            <h4 class="text-xl font-bold text-white mb-2">Why We Used It</h4>
+            <p class="text-slate-300 mb-6">We utilized the CLIP model in our project to examine and find associations between game images and their textual descriptions. The ability of this model to create a common embedding space for text and images allowed us to efficiently perform tasks like image classification and retrieval, helping uncover patterns, understand context, and improve insight into the relationships between visuals and game descriptions.</p>
+
+            <h4 class="text-xl font-bold text-white mb-2">Data Cleaning</h4>
+            <p class="text-slate-300 mb-4">The images below show data before (top) and after (bottom) cleaning.</p>
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/clip-messy-data.png" alt="CLIP Messy Data"></div>
+                <div class="img-container"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/clip-clean-data.png" alt="CLIP Clean Data"></div>
+            </div>
+            <p class="text-slate-300 mb-6">This would serve to clean game descriptions of noise like irrelevant words and characters, hence making the text data concise and meaningful. The preprocessing step helps in improving the quality of the textual embeddings that are generated by the CLIP model, therefore improving its ability to relate game descriptions with their corresponding images accurately. Cleaned data reduces computational complexity and improves overall model performance. Cleaning was also done for image dataset, such as removing 404 error URLs and only filtering screenshots for more consistent training.</p>
+
+            <h4 class="text-xl font-bold text-white mb-2">Model Evaluation (Using Similarity Scores)</h4>
+            <div class="img-container mb-4"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/clip-similarity.png" alt="CLIP Similarity Scores"></div>
+            <p class="text-slate-300 mb-6">The similarity scores indicate how well text embeddings (e.g., game descriptions) align with image embeddings in the CLIP model. Each value represents the similarity between a text-image pair where higher scores indicate stronger associations. Rows correspond to text embeddings, columns correspond to image embeddings, and together this allows for an evaluation of CLIP's effectiveness at multimodal alignment. The scores are cosine similarity, between 0 and 1. Since we are finding custom descriptions for completely new images, even a score above 0.2 is good.</p>
+
+            <div class="img-container mb-4"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/clip-output.png" alt="CLIP Output Examples"></div>
+            <p class="text-slate-300 mb-8">The CLIP is model is very effective in describing what each game image is. In a matrix of 10 images, it was able to correctly describe each image. Thus proving CLIP is a effective image to text model. The examples of results provided show the capability of the CLIP model in analyzing and describing game screenshots in high detail. For each of the nine game images, CLIP identified relevant tags or genres such as "space combat simulation," "stealth game," "resource management game," and "visual novel," among others. It successfully aligned visual elements from the images with meaningful semantic labels, showcasing its capability to understand and interpret visual data in the gaming context. The CLIP is model is very effective in describing what each game image is. In a matrix of 10 images, it was able to correctly describe each image. Thus proving CLIP is an effective image to text model.</p>
+
+            <h4 class="text-xl font-bold text-white mb-2">What We Learned</h4>
+            <p class="text-slate-300">This functionality has many applications in the analysis of games. CLIP enables automation in categorizing and tagging games with screenshots, reducing human effort and improving scalability for large gaming datasets. This can be useful for game developers and platforms in streamlining their metadata creation processes, therefore making it easier for end-users to discover or search for games. It also improves the quality of the recommendation systems by allowing them to suggest games with appealing visuals or gameplay themes that appeal to the users' likings. Moreover, the ability of CLIP to extract meaningful insights from images will help in content moderation, ensuring the proper classification of the games. By pairing visual data with descriptive text, CLIP bridges the gap between visual representation and semantic understanding and is a powerful tool for indexing, filtering, and analysis of games efficiently and in a scalable manner.</p>
+        </div>
+
+        <div class="gsap-reveal border-t border-slate-800 pt-16">
+            <h3 class="text-3xl font-bold text-blue-400 mb-6">Gradient Boosting</h3>
+            
+            <h4 class="text-xl font-bold text-white mb-2">Model Explanation</h4>
+            <p class="text-slate-300 mb-6">Gradient Boosting is a powerful machine learning technique that generates models sequentially, each new model correcting errors of the previous ones. A weak learner, usually decision trees, is combined into a strong predictive model through minimizing a loss function. Gradient Boosting has a wide range of applications in regression and classification problems, where it maintains accuracy and flexibility.</p>
+            
+            <h4 class="text-xl font-bold text-white mb-2">Why We Used It</h4>
+            <p class="text-slate-300 mb-6">We applied Gradient Boosting to the image data set for an effective modeling of dependencies between features including brightness, saturation, hue and contrast, impacting the visual characteristics. Its ability to deal with non-linear patterns and emphasize misclassified examples ensures accurate predictions. Gradient Boosting flexibility and robustness make this approach ideal for capturing subtle variations and improvement of image-based classification or regression results in general.</p>
+
+            <p class="text-slate-300 mb-4">The dataset was created:</p>
+            <div class="img-container mb-4"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/create-dataset.png" alt="Dataset Creation"></div>
+            <p class="text-slate-300 mb-8">To train the gradient boosting model, we had to create a new dataset from the image URLs, which contained the app ids and image values such as brightness, contrast, saturation and hue. We made this so that we can find patterns in underlying aspects of the images and game success.</p>
+
+            <h4 class="text-xl font-bold text-white mb-2">MODEL EVALUATION (using Mean Square Error)</h4>
+            <div class="img-container mb-4"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/gb-mse.png" alt="Gradient Boosting MSE"></div>
+            <p class="text-slate-300 mb-8">We use Mean Squared Error to calculate an average of the squared difference between predicted and actual values. The lower the MSE, the better the accuracy of the model. At a value of 130, the model performance is good, showing that the predictions are relatively near to the actual values; thus, effective learning takes place.</p>
+
+            <h4 class="text-xl font-bold text-white mb-4">Output</h4>
+            <div class="img-container mb-4"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/gb-output.png" alt="Gradient Boosting Output"></div>
+            <p class="text-slate-300 mb-8">As we can see, the model predicts the success rate , which is the ratio of number of positive reviews to number of negative reviews. It rates higher success rate to games with more interesting game image screenshots and lesser success rates to dull or confusing game image screenshots.</p>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <div class="img-container mb-4"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/gb-heatmap.png" alt="GB Heatmap"></div>
+                    <p class="text-sm text-slate-400">This is a correlation heatmap, showing correlation between various features, as we can see most features are unrelated except contrast and brightness which have some correlation.</p>
+                </div>
+                <div>
+                    <div class="img-container mb-4"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/gb-saturation.png" alt="GB Saturation"></div>
+                    <p class="text-sm text-slate-400">This scatterplot shows the relationship between review ratio (success rate) and saturation of images. As we can see the more saturation implies less review ratio, implying more saturated images might be worse for game success.</p>
+                </div>
+                <div>
+                    <div class="img-container mb-4"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/gb-contrast.png" alt="GB Contrast"></div>
+                    <p class="text-sm text-slate-400">This scatterplot is the relation between contrast and success rate. As we can see a contrast between 50 and 80 is the sweet spot. Anything more or less results in less success rate.</p>
+                </div>
+                <div>
+                    <div class="img-container mb-4"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/gb-hue.png" alt="GB Hue"></div>
+                    <p class="text-sm text-slate-400">This graph is the boxplot relationship between hue and success rate. It shows that all colors have similar success rate and there is no correlation between color/Hue and success of a game. It means that consumers don’t prefer one color or the other. Hues between 101-127 (green-yellow) have slightly higher success rate, but nothing can be said with certainty.</p>
+                </div>
+                <div class="md:col-span-2">
+                    <div class="img-container mb-4"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/gb-brightness.png" alt="GB Brightness"></div>
+                    <p class="text-sm text-slate-400">This graph shows the relationship between brightness of game images and success rate of those games. As we can see, there is no clear relationship between brightness and game success.</p>
+                </div>
+            </div>
+
+            <h4 class="text-xl font-bold text-white mb-2">What We Learned</h4>
+            <p class="text-slate-300">From this model, we extracted a few important points about how far image features such as brightness, contrast, and saturation will reflect success rates of games through reviews. Thus, the model predicted an optimal range of 50 to 80 for contrast for high success rates, while very low or high values of contrast will negatively affect the review score. Interestingly, saturation is negatively correlated with the success rate, which might indicate that highly saturated images could turn players off. On the other hand, hue did not correlate significantly with success, which would indicate that the consumer's preference is not strongly connected with specific colors. Also, no obvious influence of brightness could be found on the success rate, meaning it's not a determining factor. The model performs well with an MSE of 130, showing that it learns the relationship between the image features and game success quite effectively. This shows the importance of specific image attributes such as contrast in predicting game success.</p>
+        </div>
+    </section>
+
+    <hr class="border-slate-800">
+
+    <section id="conclusions" class="py-24 px-6 max-w-4xl mx-auto">
+        <h2 class="text-4xl font-bold mb-12 text-center gsap-reveal">Conclusions</h2>
+        <div class="prose prose-invert prose-lg text-slate-300 space-y-6 gsap-reveal">
+            <p>Video games are at their core interactive mediums for art. They bring together elements of narrative design, art, music, sound effects, and more. Results showed that a quality story was one of the most appreciated aspects of the video games, and it held a central point in analyses. This makes sense on multiple levels. First, art is largely about telling stories. Songs (with and without lyrics) tell stories to a listener. Theatrical plays and movies show a story acted out. Books create entire world's using a reader's imagination. Humans naturally seek out stories and are drawn to them.</p>
+            <p>This raises a question of whether or not stories are more important than the other elements involved. Do art, music, sound, and game mechanics take a back seat? We say no. Without these foundational elements, a story has no support. Take, for example, the massively multiplayer genre, of which games like World of Warcraft and Guild Wars 2 are members. The central word tied to all others is "can't". Obviously a negative word in this context, poor massively multiplayer games were most likely plagued by the player's inability to do something. This would serve as an example of limited player agency or independence. Obviously game developers have to set constraints on what the player can do, but too much of a barrier can leave the game feeling stale. A common idea in video game development (and and various jobs like user experience design, sound, and lighting) is that audience attention should not be fully drawn to these elements. If it is, that is probably a clear sign that something is off. This is because, again, these are often supporting elements adding to a whole. Too much attention drawn to any individual element is distracting from the bigger picture.</p>
+            <p>In the realm of art, we showed the potential to translate a static image into a short game description. Art is almost always a game's first impression, and many developers and players have anecdotally stated that art can make or break a game's success. The ability to create a static image and have it automatically labeled then gives a game developer, character artist, environmental artist, or anyone else involved in art production a strong tool to seek out games with similar art styles and be inspired by the genres of these games. Innovation in games often comes from taking inspiration from several other games and merging together unique combinations of mechanics. It is then possible to find significant quantities of inspiration quickly simply by automatically tagging a static frame.</p>
+            <p>Additionally in the realm of art, we show a potential link between elements of game art (like saturation and contrast) with game success. Results showed potential optimal levels of contrast and saturation in images. A mid range contrast amount predicted slightly better performance, and higher levels of saturation tended to be indicative of worse performing games.</p>
+            <p>This project represents a small part of the potential future analyses that could be completed. Reviews and art represent only a portion of the video game landscape. Music, sound effects, lighting effects, story design, and more all are included in the development process of a game. In the future, further work could be dedicated to integrating more types of data together (eg more metadata, audio, etc.), interaction design analysis, market analytics, and platform specific patterns.</p>
+        </div>
+    </section>
+
+    <section id="team" class="py-24 px-6 bg-slate-900 border-t border-slate-800">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl font-bold mb-16 text-center gsap-reveal">The Team</h2>
+            
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-700 gsap-reveal flex flex-col md:flex-row gap-6 items-center md:items-start text-center md:text-left">
+                    <div class="w-32 h-32 flex-shrink-0 rounded-full overflow-hidden border-4 border-slate-700">
+                        <img src="https://www.audiovascular.com/assets/data-mining-assets/team/atharva-photo.jpg" alt="Atharva Sachin Patil" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Atharva Sachin Patil</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">Atharva Patil holds a Bachelor's of Technology in Information Technology from the University of Mumbai and is currently pursuing a Master's degree in Data Science at the University of Colorado Boulder. Passionate about machine learning, he focuses on applying AI and ML models to tackle real-world challenges and drive innovation.</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-700 gsap-reveal flex flex-col md:flex-row gap-6 items-center md:items-start text-center md:text-left">
+                    <div class="w-32 h-32 flex-shrink-0 rounded-full overflow-hidden border-4 border-slate-700">
+                        <img src="https://www.audiovascular.com/assets/data-mining-assets/team/deep-cropped.png" alt="Deep Kalpesh Shukla" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Deep Kalpesh Shukla</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">Deep Shukla completed his undergraduate degree at Mumbai University in Artificial Intelligence and Data Science. He is current a master's student in Data Science at the University of Colorado Boulder.</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-700 gsap-reveal flex flex-col md:flex-row gap-6 items-center md:items-start text-center md:text-left md:col-span-2">
+                    <div class="w-32 h-32 flex-shrink-0 rounded-full overflow-hidden border-4 border-slate-700">
+                        <img src="https://www.audiovascular.com/assets/profile-photo-cropped.jpg" alt="Daniel Ethridge" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Daniel Ethridge</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-4">Originally from Atlanta, Georgia, Daniel is a multi-faceted musician, sound engineer, and software engineer whose interests lie at the intersection of music, physiology, and technology. As a second year PhD student, he is researching music perception and cognition through the lens of cardiac signals such as heart rate and heart rate variability. He wants to employ methods from data mining and machine learning to take advantage of and analyze the vast and preexisting mixed audiovisual and physiological data available on the internet. Daniel received a Bachelor's degree in mathematics and music from Brevard College in Brevard, North Carolina and later a Master of Science in Music Technology from the Georgia Institute of Technology in Atlanta, Georgia. He is currently advised by Dr. Grace Leslie, professor of music and director of the Brain Music Lab at the ATLAS Institute.</p>
+                        <p class="text-blue-400 text-sm font-semibold">University Email: Daniel.Ethridge@colorado.edu</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-700 gsap-reveal flex flex-col md:flex-row gap-6 items-center md:items-start text-center md:text-left md:col-span-2">
+                    <div class="w-32 h-32 flex-shrink-0 rounded-full overflow-hidden border-4 border-slate-700">
+                        <img src="https://www.audiovascular.com/assets/data-mining-assets/team/sujith-photo.jpeg" alt="Sujith Battu" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Sujith Battu</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">Sujith Battu is currently a Data Science Master's student at the University of Colorado Boulder with a passion for large data collection and medical image analysis. He completed an internship at the Defense Research and Development Organization (DRDO) where he gained practical experience in applying data modeling techniques. His goal is to pursue a career as a data scientist.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-slate-950 py-8 text-center text-slate-500 text-sm">
+        <p>&copy; 2026 ProjectML Data Mining Team. All rights reserved.</p>
+    </footer>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Hero Anim
+        gsap.fromTo(".gsap-hero", 
+            { y: 50, opacity: 0 }, 
+            { y: 0, opacity: 1, duration: 1.2, stagger: 0.2, ease: "power3.out" }
+        );
+
+        // Scroll Reveals
+        gsap.utils.toArray('.gsap-reveal').forEach(function(elem) {
+            gsap.fromTo(elem, 
+                { y: 40, opacity: 0, autoAlpha: 0 }, 
+                {
+                    y: 0, opacity: 1, autoAlpha: 1, duration: 1, ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: elem,
+                        start: "top 85%",
+                        toggleActions: "play none none reverse"
+                    }
+                }
+            );
+        });
+    </script>
+</body>
+</html>
