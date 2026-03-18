@@ -435,7 +435,617 @@
 
 <hr class="divider">
 
-<!-- PLACEHOLDER_REMAINING_CONTENT -->
+<!-- ═══════════════════════════════════════════
+     INTRODUCTION
+     ═══════════════════════════════════════════ -->
+<section id="intro">
+    <div class="container">
+        <div class="fade-up">
+            <div class="section-tag">Introduction</div>
+            <h2 class="section-title">The problem with getting advice</h2>
+            <p class="section-lead">Steam has 200,000+ games. Anyone can ship. But there's no real roadmap for success — just scattered tools and conflicting advice. So we asked: <em style="color:var(--text-hi)">what does the data actually say?</em></p>
+        </div>
+
+        <div class="intro-body fade-up">
+            <div class="card card-amber">
+                <div class="card-icon">⚠️</div>
+                <h4>The information gap</h4>
+                <p>Current tools show you what players thought about one game. They don't show patterns across thousands of games, or what separates successful releases from failed ones.</p>
+            </div>
+            <div class="card card-blue">
+                <div class="card-icon">💡</div>
+                <h4>The data-first approach</h4>
+                <p>By analyzing games at scale, patterns emerge: what successful games share, what struggling games have in common, and what that means for real development decisions.</p>
+            </div>
+            <div class="card card-green">
+                <div class="card-icon">🎯</div>
+                <h4>Who this helps</h4>
+                <p>Indie developers, art directors, marketing teams, and platforms like Steam itself, where better pattern analysis means better recommendations for players.</p>
+            </div>
+        </div>
+
+        <div class="fade-up" style="margin-top:3.5rem;">
+            <div class="section-tag">Research Questions</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">
+                <ul class="q-list" style="border-right:1px solid var(--border);padding:0.5rem 1.8rem;">
+                    <li class="q-item"><span class="q-num">01</span><span class="q-text">Do indie games perform differently from AAA titles in terms of user feedback?</span></li>
+                    <li class="q-item"><span class="q-num">02</span><span class="q-text">Can promotional materials like descriptions and screenshots predict a game's success?</span></li>
+                    <li class="q-item"><span class="q-num">03</span><span class="q-text">How do game trailers affect user reviews and ratings?</span></li>
+                    <li class="q-item"><span class="q-num">04</span><span class="q-text">Do certain genres consistently score better in user ratings?</span></li>
+                    <li class="q-item"><span class="q-num">05</span><span class="q-text">How do regional preferences shape the success of specific genres?</span></li>
+                </ul>
+                <ul class="q-list" style="padding:0.5rem 1.8rem;">
+                    <li class="q-item"><span class="q-num">06</span><span class="q-text">Is trailer length correlated with user ratings?</span></li>
+                    <li class="q-item"><span class="q-num">07</span><span class="q-text">How does social media activity influence a game's success?</span></li>
+                    <li class="q-item"><span class="q-num">08</span><span class="q-text">How do reviews change over time after a game's release?</span></li>
+                    <li class="q-item"><span class="q-num">09</span><span class="q-text">Are there musical genres commonly found in highly-rated games?</span></li>
+                    <li class="q-item"><span class="q-num">10</span><span class="q-text">What compositional elements in soundtracks correlate with positive reviews?</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════
+     DATA COLLECTION & EXPLORATION
+     ═══════════════════════════════════════════ -->
+<section id="data">
+    <div class="container">
+        <div class="fade-up">
+            <div class="section-tag">Data Collection and Exploration</div>
+            <h2 class="section-title">Building the dataset</h2>
+            <p class="section-lead">All data came directly from Steam's public API. No third-party datasets, no scraping workarounds.</p>
+        </div>
+
+        <div class="split mb-6">
+            <div class="split-text fade-left">
+                <h3>Three endpoints, millions of records</h3>
+                <p>The pipeline starts by fetching all app IDs, then loops through each one to pull full app metadata and paginated reviews. Cursor-based pagination handles multi-page review sets.</p>
+                <p>All responses come back as JSON. From there, data gets cleaned and organized into CSV files using a consistent schema, with one exception: the description column needed additional processing to strip HTML tags and non-text characters.</p>
+            </div>
+            <div class="fade-right">
+                <div class="code-block">
+                    <div class="code-comment">// Three API endpoints powering the dataset</div><br>
+                    <div><span class="code-method">GET</span> api.steampowered.com/ISteamApps/GetAppList/v2/</div>
+                    <div class="code-comment">  All Steam app IDs</div><br>
+                    <div><span class="code-method">GET</span> store.steampowered.com/api/appdetails?appids=&lt;ID&gt;</div>
+                    <div class="code-comment">  Full metadata for a single app</div><br>
+                    <div><span class="code-method">GET</span> store.steampowered.com/appreviews/&lt;ID&gt;?json=1</div>
+                    <div style="padding-left:1.2rem;opacity:0.6">&amp;num_per_page=100&amp;cursor=&lt;CUR&gt;</div>
+                    <div class="code-comment">  Paginated reviews per app</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fade-up mb-6 img-wide">
+            <div class="section-tag">Raw API Response</div>
+            <div class="img-wrap will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/json-screenshot.png" alt="JSON API response" class="parallax-target" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+            <p class="img-caption">Example JSON response from the App Details endpoint. Each record contains metadata, pricing, genres, screenshots, trailers, and developer info.</p>
+        </div>
+
+        <div class="data-visual-row mb-6 fade-up">
+            <div>
+                <div class="section-tag">Database Schema</div>
+                <div class="img-wrap will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/data-mining-database-schema.png" alt="Database schema" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                <p class="img-caption">The relational schema organizes apps, reviews, publishers, developers, and media into linked tables.</p>
+            </div>
+            <div>
+                <div class="section-tag">CSV Format</div>
+                <div class="img-wrap will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/info-file.png" alt="CSV data format" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                <p class="img-caption">App details in structured CSV format. Rows with broken descriptions aren't deleted, just set to empty string, keeping the rest of the row's data usable across other analyses.</p>
+            </div>
+        </div>
+
+        <div class="fade-up mb-6">
+            <div class="section-tag">Dataset Size</div>
+            <div class="callout-grid">
+                <div class="callout-cell"><div class="callout-num">23,780</div><div class="callout-label">Total apps with details</div></div>
+                <div class="callout-cell"><div class="callout-num">4,189,520</div><div class="callout-label">App reviews (text)</div></div>
+                <div class="callout-cell"><div class="callout-num">266,688</div><div class="callout-label">App images (URLs)</div></div>
+                <div class="callout-cell"><div class="callout-num">25,584</div><div class="callout-label">App trailers (URLs)</div></div>
+                <div class="callout-cell"><div class="callout-num">14,687</div><div class="callout-label">Unique developers</div></div>
+                <div class="callout-cell"><div class="callout-num">12,866</div><div class="callout-label">Unique publishers</div></div>
+            </div>
+        </div>
+
+        <div class="split mb-6">
+            <div class="split-text fade-left">
+                <div class="section-tag">Data Cleaning</div>
+                <h3>Getting reviews into shape</h3>
+                <p>The tricky part of cleaning is the description field, which comes filled with HTML tags, special characters, and noise. Reviews and descriptions were also transformed into transaction format, where each row is a document and each column a word token. This structure is required input for Association Rule Mining.</p>
+            </div>
+            <div class="fade-right">
+                <div class="img-wrap will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/review-transaction-format.png" alt="Transaction format data" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                <p class="img-caption">Reviews converted to transaction (basket) format. Required for Apriori mining in the next step.</p>
+            </div>
+        </div>
+
+        <!-- VISUALIZATIONS -->
+        <div class="fade-up mb-4">
+            <div class="section-tag">Exploratory Visualizations</div>
+            <h2 class="section-title">What the data shows before any modeling</h2>
+        </div>
+
+        <div class="img-pair fade-up mb-6">
+            <div>
+                <div class="img-wrap will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/tableau%20graphs/Bottom%20developers/Bottom%20devs.png" alt="Most negatively reviewed developers" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                <p class="img-caption">Top 10 most negatively reviewed developers. Rare Ltd and DICE lead in negatives, but both carry comparable positive counts. Polarized audiences, not consistent failure.</p>
+            </div>
+            <div>
+                <div class="img-wrap will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/tableau%20graphs/Bottom%20Publishers/Bottom%20pubs.png" alt="Most negatively reviewed publishers" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                <p class="img-caption">Top 10 most negatively reviewed publishers. EA leads in negatives but nearly matches in positives too. Mixed reception is the dominant pattern here, not outright failure.</p>
+            </div>
+        </div>
+
+        <div class="fade-up mb-6 img-wide">
+            <div class="img-wrap will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/tableau%20graphs/Bubbleplot/Bubbleplot%20-%20price%20vs%20review%20sentiment.png" alt="Price vs review sentiment" class="parallax-target" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+            <p class="img-caption">Price vs. review sentiment. Bubble size shows sentiment ratio (larger = more positive). Color shows price (redder = more expensive). Higher-priced games trend toward better sentiment, consistent with larger production budgets.</p>
+        </div>
+
+        <div class="img-pair fade-up mb-6">
+            <div>
+                <div class="img-wrap will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/tableau%20graphs/Piechart/Piechart%20-%20App%20type%20vs%20Number%20of%20games.png" alt="App type distribution" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                <p class="img-caption">App type distribution. Games dominate the catalog, followed by DLC and music apps. This confirmed filtering analysis to game-type apps only.</p>
+            </div>
+            <div>
+                <div class="img-wrap will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/tableau%20graphs/Scatterplot/Scatterplot%20-%20Price%20vs%20Reviews.png" alt="Price vs total reviews" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                <p class="img-caption">Price vs. total reviews, outliers removed. Red = net negative, green = net positive. Most games are positively reviewed. No clear trend between price and review volume.</p>
+            </div>
+        </div>
+
+        <div class="img-pair fade-up mb-6">
+            <div>
+                <div class="img-wrap will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/tableau%20graphs/Top%2010%20Devs/TOP%2010%20DEVs.png" alt="Top 10 developers" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                <p class="img-caption">Top 10 developers by positive reviews. Capcom leads in total volume; BioWare holds the highest positive ratio.</p>
+            </div>
+            <div>
+                <div class="img-wrap will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/tableau%20graphs/Top%2010%20Publishers/Top%2010%20PUBs.png" alt="Top 10 publishers" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                <p class="img-caption">Top 10 publishers. EA leads in total volume; Arc System Works captures the highest positive share, a strong signal for fighting game niche performance.</p>
+            </div>
+        </div>
+
+        <div class="fade-up mb-6 img-wide">
+            <div class="img-wrap will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/Python%20graphs/Top%205%20genre/Top%205%20genre.jpeg" alt="Top 5 genres" class="parallax-target" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+            <p class="img-caption">Top 5 genres by positive review count. Action leads comfortably, and these top genres show minimal negative review volume. Genre choice carries real signal.</p>
+        </div>
+
+        <div class="img-pair fade-up">
+            <div>
+                <div class="img-wrap will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/histogram-review-lengths.png" alt="Review length distribution" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                <p class="img-caption">Review length distribution. Short reviews vastly outnumber long ones. The long tail of detailed reviews is where the richest ARM signal lives.</p>
+            </div>
+            <div>
+                <div class="img-wrap will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/numwords-vs-gameplay-time.png" alt="Playtime vs review length" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                <p class="img-caption">Review length vs. playtime before writing. Counterintuitive: longer reviews come from players with less playtime. Highly invested players tend to say less in writing, not more.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════
+     MODELS
+     ═══════════════════════════════════════════ -->
+<section id="models">
+    <div class="container">
+        <div class="fade-up">
+            <div class="section-tag">Models Implemented</div>
+            <h2 class="section-title">Three models. One question.</h2>
+            <p class="section-lead">We combined unsupervised language mining, vision-language alignment, and gradient-boosted image feature modeling to cover the full range of game signals.</p>
+        </div>
+
+        <!-- ARM -->
+        <div class="mb-8">
+            <div class="model-header fade-up">
+                <span class="model-tag">Model 01</span>
+                <span class="model-title">Association Rule Mining</span>
+            </div>
+
+            <div class="fade-up mb-6">
+                <h3 style="margin-bottom:0.8rem;">Finding patterns in what players write</h3>
+                <p style="max-width:100%;margin-bottom:0.7rem;">ARM looks at which words appear together in game reviews, grouped by genre and by whether the game was mostly liked or mostly disliked. Using the Apriori algorithm, it surfaces which concepts cluster together and how strongly. Games were labeled positive or negative based on their overall review ratio. Reviews were stripped down to meaningful tokens, removing punctuation, numbers, stopwords, duplicates, and non-latin characters. Basket data was then generated per genre across all 10 genres. Positive reviews: support 0.01, confidence 0.4. Negative reviews: support 0.02, confidence 0.55.</p>
+            </div>
+
+            <div class="section-tag fade-up">Before and After Cleaning</div>
+            <div class="img-pair fade-up mb-6">
+                <div>
+                    <div class="img-wrap will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/raw-arm-text.png" alt="Raw ARM text" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                    <p class="img-caption">Raw messy review text — full of noise, HTML artefacts, and non-latin characters.</p>
+                </div>
+                <div>
+                    <div class="img-wrap will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/transaction-data-for-arm.png" alt="Clean transaction data" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                    <p class="img-caption">Tokenized basket format ready for Apriori — clean, structured, and deduped.</p>
+                </div>
+            </div>
+
+            <div class="fade-up mb-4">
+                <div class="section-tag">Positive Review Association Plots</div>
+                <div class="arm-grid">
+                    <div class="arm-tile will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/liked-action.png" alt="Action" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"><div class="arm-label">Action</div></div>
+                    <div class="arm-tile will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/liked-adventure.png" alt="Adventure" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"><div class="arm-label">Adventure</div></div>
+                    <div class="arm-tile will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/liked-casual.png" alt="Casual" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"><div class="arm-label">Casual</div></div>
+                    <div class="arm-tile will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/liked-indie.png" alt="Indie" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"><div class="arm-label">Indie</div></div>
+                    <div class="arm-tile will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/liked-multiplayer.png" alt="Multiplayer" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"><div class="arm-label">Multiplayer</div></div>
+                    <div class="arm-tile will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/liked-racing.png" alt="Racing" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"><div class="arm-label">Racing</div></div>
+                    <div class="arm-tile will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/liked-rpg.png" alt="RPG" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"><div class="arm-label">RPG</div></div>
+                    <div class="arm-tile will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/liked-simulation.png" alt="Simulation" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"><div class="arm-label">Simulation</div></div>
+                    <div class="arm-tile will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/liked-sports.png" alt="Sports" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"><div class="arm-label">Sports</div></div>
+                    <div class="arm-tile will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/liked-strategy.png" alt="Strategy" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"><div class="arm-label">Strategy</div></div>
+                </div>
+            </div>
+
+            <div class="grid-2 mb-6 fade-up">
+                <div class="card card-green">
+                    <div class="card-icon">✅</div>
+                    <h4>Immersion drives positive reviews</h4>
+                    <p>Across genres, well-received games let players stay focused on the story and the overall experience. Art, music, and mechanics work together without pulling anyone out of the moment.</p>
+                </div>
+                <div class="card card-green">
+                    <div class="card-icon">📖</div>
+                    <h4>Story is the hub</h4>
+                    <p>Story emerges as a central cluster node across multiple genres in positive reviews. It doesn't replace other elements, but it's what everything else is built around.</p>
+                </div>
+            </div>
+
+            <div class="fade-up mb-4">
+                <div class="section-tag">Negative Review Association Plots</div>
+                <div class="arm-grid">
+                    <div class="arm-tile will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/disliked-action.png" alt="Action" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"><div class="arm-label">Action</div></div>
+                    <div class="arm-tile will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/disliked-adventure.png" alt="Adventure" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"><div class="arm-label">Adventure</div></div>
+                    <div class="arm-tile will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/disliked-casual.png" alt="Casual" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"><div class="arm-label">Casual</div></div>
+                    <div class="arm-tile will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/disliked-indie.png" alt="Indie" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"><div class="arm-label">Indie</div></div>
+                    <div class="arm-tile will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/disliked-multiplayer.png" alt="Multiplayer" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"><div class="arm-label">Multiplayer</div></div>
+                    <div class="arm-tile will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/disliked-racing.png" alt="Racing" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"><div class="arm-label">Racing</div></div>
+                    <div class="arm-tile will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/disliked-rpg.png" alt="RPG" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"><div class="arm-label">RPG</div></div>
+                    <div class="arm-tile will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/disliked-simulation.png" alt="Simulation" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"><div class="arm-label">Simulation</div></div>
+                    <div class="arm-tile will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/disliked-sports.png" alt="Sports" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"><div class="arm-label">Sports</div></div>
+                    <div class="arm-tile will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/arm/disliked-strategy.png" alt="Strategy" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"><div class="arm-label">Strategy</div></div>
+                </div>
+            </div>
+
+            <div class="card card-red fade-up">
+                <div class="card-icon">⚡</div>
+                <h4>Negative reviews scatter. Positive ones cluster.</h4>
+                <p>Unlike positive reviews, negative ones don't converge around a single theme. The exception is multiplayer games, where "can't" dominates as the central node, pointing to restricted player freedom as the main failure driver. In other genres, the patterns suggest one broken element can sink an otherwise decent game regardless of what else works.</p>
+            </div>
+        </div>
+
+        <!-- CLIP -->
+        <div class="mb-8 mt-8" style="padding-top:3rem;border-top:1px solid var(--border)">
+            <div class="model-header fade-up">
+                <span class="model-tag">Model 02</span>
+                <span class="model-title">CLIP — Vision-Language Alignment</span>
+            </div>
+
+            <div class="fade-up mb-5">
+                <h3 style="margin-bottom:0.8rem;">Connecting game images to words</h3>
+                <p style="max-width:100%;margin-bottom:0.6rem;">CLIP, developed by OpenAI, maps images and text into a shared embedding space. It was trained to match captions to images across a massive dataset, giving it the ability to classify and label images without task-specific fine-tuning. We used it to automatically tag game screenshots with genre and context labels. The architecture runs a ViT or ResNet for images and a Transformer for text, then compares outputs using cosine similarity. For novel pairs, a score above 0.2 is considered meaningful alignment. This lets us connect visual content to semantic labels at scale, with no manual annotation required.</p>
+            </div>
+
+            <div class="section-tag fade-up">Before and After Cleaning</div>
+            <div class="img-pair fade-up mb-6">
+                <div>
+                    <div class="img-wrap will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/clip-messy-data.png" alt="Messy CLIP data" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                    <p class="img-caption">Raw game descriptions — full of irrelevant tokens and 404-error image URLs.</p>
+                </div>
+                <div>
+                    <div class="img-wrap will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/clip-clean-data.png" alt="Clean CLIP data" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                    <p class="img-caption">Cleaned descriptions after stripping noise. Cleaner text produces better embeddings.</p>
+                </div>
+            </div>
+
+            <div class="fade-up mb-6 img-wide">
+                <div class="section-tag">Similarity Score Matrix</div>
+                <div class="img-wrap will-reveal mb-3"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/clip-similarity.png" alt="CLIP similarity scores" class="parallax-target" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                <p class="img-caption">Cosine similarity between text and image embeddings. Rows are text, columns are images. Diagonal dominance confirms the model correctly matches descriptions to their corresponding game screenshots.</p>
+            </div>
+
+            <div class="fade-up mb-6 img-wide">
+                <div class="section-tag">Zero-Shot Output Examples</div>
+                <div class="img-wrap will-reveal mb-3"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/clip-output.png" alt="CLIP output examples" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                <p class="img-caption">CLIP labeled all 10 test images correctly with no fine-tuning, identifying tags like "space combat simulation," "stealth game," and "visual novel" purely from screenshots.</p>
+            </div>
+
+            <div class="card card-cyan fade-up">
+                <div class="card-icon">🔍</div>
+                <h4>What this opens up for developers</h4>
+                <p>Drop a screenshot and get genre tags automatically. Use those tags to find comparable successful games, gather inspiration faster than any manual research process, and feed better signals into recommendation systems. The approach scales to any size catalog.</p>
+            </div>
+        </div>
+
+        <!-- GRADIENT BOOSTING -->
+        <div class="mt-8" style="padding-top:3rem;border-top:1px solid var(--border)">
+            <div class="model-header fade-up">
+                <span class="model-tag">Model 03</span>
+                <span class="model-title">Gradient Boosting — Image Features</span>
+            </div>
+
+            <div class="fade-up mb-5">
+                <h3 style="margin-bottom:0.8rem;">Do visual properties predict success?</h3>
+                <p style="max-width:100%;margin-bottom:0.6rem;">Gradient Boosting builds models sequentially, each new tree correcting errors from the last. We used it to predict game success — measured by positive review ratio — from per-image visual features: brightness, saturation, hue, and contrast extracted from game screenshots. A custom dataset was built from screenshot URLs, extracting those four values per image and linking them back to app IDs and their review ratios. Mean Squared Error of 130 confirms the model learns the relationship effectively.</p>
+            </div>
+
+            <div class="img-pair fade-up mb-6">
+                <div>
+                    <div class="section-tag">Dataset Creation</div>
+                    <div class="img-wrap will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/create-dataset.png" alt="Dataset creation" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                    <p class="img-caption">Building the image feature dataset. Each row is a game, with extracted visual metrics and review ratio as the prediction target.</p>
+                </div>
+                <div>
+                    <div class="section-tag">Model Performance (MSE)</div>
+                    <div class="img-wrap will-reveal"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/gb-mse.png" alt="MSE score" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                    <p class="img-caption">MSE of 130. Lower is better. The model learns the relationship between image features and review ratios without overfitting.</p>
+                </div>
+            </div>
+
+            <div class="fade-up mb-4">
+                <div class="section-tag">Feature Analysis</div>
+                <div class="grid-2 mb-4">
+                    <div>
+                        <div class="img-wrap will-reveal mb-2" style="height:200px"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/gb-heatmap.png" alt="Correlation heatmap" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                        <p class="img-caption"><strong>Correlation heatmap.</strong> Most features are independent. One exception: contrast and brightness share moderate correlation.</p>
+                    </div>
+                    <div>
+                        <div class="img-wrap will-reveal mb-2" style="height:200px"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/gb-saturation.png" alt="Saturation vs success" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                        <p class="img-caption"><strong>Saturation vs. success rate.</strong> More saturated images predict lower review ratios. Garish visuals signal lower production quality.</p>
+                    </div>
+                    <div>
+                        <div class="img-wrap will-reveal mb-2" style="height:200px"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/gb-contrast.png" alt="Contrast vs success" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                        <p class="img-caption"><strong>Contrast vs. success rate.</strong> Sweet spot: 50–80. Too low feels flat; too high feels harsh. Both hurt review scores.</p>
+                    </div>
+                    <div>
+                        <div class="img-wrap will-reveal mb-2" style="height:200px"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/gb-hue.png" alt="Hue vs success" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                        <p class="img-caption"><strong>Hue vs. success rate.</strong> Color choice alone doesn't predict success. Slight edge for greens and yellows, but nothing conclusive.</p>
+                    </div>
+                </div>
+                <div class="img-wrap will-reveal mb-2 img-wide"><img src="https://www.audiovascular.com/assets/data-mining-assets/visualisations/clip/gb-brightness.png" alt="Brightness vs success" class="parallax-target" onerror="this.parentElement.style.minHeight='180px';this.style.display='none'"></div>
+                <p class="img-caption"><strong>Brightness vs. success rate.</strong> No clear correlation. Brightness is a free variable for developers.</p>
+            </div>
+
+            <div class="card card-amber fade-up">
+                <div class="card-icon">🎨</div>
+                <h4>Practical takeaways for art direction</h4>
+                <p>Target contrast between 50 and 80 in marketing screenshots. Pull back on saturation. Clean, controlled color palettes outperform maximalist ones. Brightness and hue are largely free variables. These are data-backed guidelines, not aesthetic opinion.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════
+     CONCLUSIONS
+     ═══════════════════════════════════════════ -->
+<section id="conclusions">
+    <div class="container">
+        <div class="fade-up">
+            <div class="section-tag">Conclusions</div>
+            <h2 class="section-title">What we found</h2>
+        </div>
+
+        <div class="grid-3 mb-8 fade-up">
+            <div class="card card-blue">
+                <div class="card-icon">📖</div>
+                <h4>Story is the spine</h4>
+                <p>Across genres, story emerged as the central cluster in positive reviews. Games are interactive art, and like most art, they're fundamentally about narrative. A weak story undermines everything built on top of it.</p>
+            </div>
+            <div class="card card-blue">
+                <div class="card-icon">🎵</div>
+                <h4>Good craft disappears</h4>
+                <p>In well-received games, music, visuals, and mechanics support the experience rather than competing for attention. If a player notices the soundtrack, something has probably gone wrong.</p>
+            </div>
+            <div class="card card-blue">
+                <div class="card-icon">🎮</div>
+                <h4>Restrictions kill engagement</h4>
+                <p>In multiplayer games, restricted player freedom showed up clearly as a failure driver. Players feel when they're boxed in, and it damages the whole experience regardless of what else works.</p>
+            </div>
+        </div>
+
+        <div style="max-width:780px;margin:0 auto;" class="fade-up">
+            <p class="mb-3">Video games are interactive art. They bring together narrative design, visuals, music, sound, and mechanical systems into a single coherent experience. Our results showed that coherence, and especially a quality story, is one of the most consistently appreciated elements across genres.</p>
+            <p class="mb-3">Does story outrank everything else? We'd say no. Without strong supporting elements, even a good narrative falls flat. Take the massively multiplayer genre: in negatively reviewed games, the dominant theme in player language was limitation. Players couldn't do what they wanted. The game itself had become the obstacle. Good design, sound, and art are often invisible because they enable rather than restrict.</p>
+            <p class="mb-3">On the visual side, we showed the potential to automatically translate a game screenshot into a genre and context label, with no fine-tuning required. Art is almost always a game's first impression. The ability to auto-tag a static image means a developer can now find games with similar visual styles much faster, which makes gathering competitive research and inspiration dramatically more efficient.</p>
+            <p class="mb-3">We also found a quantifiable link between image properties and game success. Contrast and saturation carry real signal: an optimal contrast range of 50 to 80 predicts better-performing games, and higher saturation correlates negatively with success. These are concrete, data-derived guidelines, not guesswork from a design opinion piece.</p>
+            <p>Reviews and screenshots are just one slice of what shapes a game. Music, sound design, lighting, story structure, and platform-specific behavior patterns all remain largely unexplored. The methodology here scales, and so does the potential for what comes next.</p>
+        </div>
+    </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════
+     TEAM
+     ═══════════════════════════════════════════ -->
+<section id="team">
+    <div class="container">
+        <div class="fade-up" style="text-align:center;margin-bottom:2.5rem;">
+            <div class="section-tag center">The Team</div>
+            <h2 class="section-title">Four researchers at CU Boulder</h2>
+        </div>
+
+        <div class="team-grid">
+            <div class="team-card fade-up">
+                <div class="team-avatar"><img src="https://www.audiovascular.com/assets/data-mining-assets/team/atharva-photo.jpg" alt="Atharva Sachin Patil" onerror="this.parentElement.style.minHeight='72px';this.style.display='none'"></div>
+                <div class="team-name">Atharva Sachin Patil</div>
+                <div class="team-role">MS Data Science</div>
+                <div class="team-degree">B.Tech IT, University of Mumbai</div>
+                <a href="mailto:atharva.patil@colorado.edu" class="team-email-link"><span>✉️</span> atharva.patil@colorado.edu</a>
+            </div>
+            <div class="team-card fade-up">
+                <div class="team-avatar"><img src="https://www.audiovascular.com/assets/data-mining-assets/team/deep-cropped.png" alt="Deep Kalpesh Shukla" onerror="this.parentElement.style.minHeight='72px';this.style.display='none'"></div>
+                <div class="team-name">Deep Kalpesh Shukla</div>
+                <div class="team-role">MS Data Science</div>
+                <div class="team-degree">B.E. AI and Data Science, TSEC Mumbai</div>
+                <a href="mailto:deep.shukla@colorado.edu" class="team-email-link"><span>✉️</span> deep.shukla@colorado.edu</a>
+            </div>
+            <div class="team-card fade-up">
+                <div class="team-avatar"><img src="https://www.audiovascular.com/assets/profile-photo-cropped.jpg" alt="Daniel Ethridge" onerror="this.parentElement.style.minHeight='72px';this.style.display='none'"></div>
+                <div class="team-name">Daniel Ethridge</div>
+                <div class="team-role">PhD Student</div>
+                <div class="team-degree">Music Perception & Cognition, ATLAS Institute</div>
+                <a href="mailto:daniel.ethridge@colorado.edu" class="team-email-link"><span>✉️</span> daniel.ethridge@colorado.edu</a>
+            </div>
+            <div class="team-card fade-up">
+                <div class="team-avatar"><img src="https://www.audiovascular.com/assets/data-mining-assets/team/sujith-photo.jpeg" alt="Sujith Battu" onerror="this.parentElement.style.minHeight='72px';this.style.display='none'"></div>
+                <div class="team-name">Sujith Battu</div>
+                <div class="team-role">MS Data Science</div>
+                <div class="team-degree">DRDO Internship, Medical Image Analysis</div>
+                <a href="mailto:sujith.battu@colorado.edu" class="team-email-link"><span>✉️</span> sujith.battu@colorado.edu</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+    <div class="footer-inner">
+        <div class="footer-copyright">CSCI 4502 · Data Mining<br>University of Colorado Boulder · 2024</div>
+        <div class="footer-center">
+            <div class="footer-name">Video Game Industry / Data Mining</div>
+            <div class="footer-sub">Atharva · Deep · Daniel · Sujith</div>
+        </div>
+        <div class="footer-socials">
+            <a href="https://www.linkedin.com/in/atharvapatil" target="_blank" class="footer-social-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                Atharva
+            </a>
+            <a href="https://linkedin.com/in/deep-shukla-b4035220a" target="_blank" class="footer-social-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                Deep
+            </a>
+            <a href="https://www.audiovascular.com" target="_blank" class="footer-social-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                Daniel
+            </a>
+            <a href="https://www.linkedin.com/in/sujithbattu" target="_blank" class="footer-social-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                Sujith
+            </a>
+            <a href="https://github.com/atharvapatil" target="_blank" class="footer-social-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                GitHub ×4
+            </a>
+        </div>
+    </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     GSAP — Premium Animation System
+     ═══════════════════════════════════════════ -->
+<script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* ── Hero: Staggered line-by-line reveal ── */
+    const heroEls = document.querySelectorAll('.hero-content .fade-up, .hero-content .line-inner.fade-up');
+    gsap.fromTo(heroEls,
+        { y: 60, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1.1, ease: 'power3.out', stagger: 0.1, delay: 0.2 }
+    );
+    gsap.fromTo('.hero-poster.fade-up',
+        { y: 50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out', delay: 0.7 }
+    );
+
+    /* ── Scroll-triggered fade animations ── */
+    function revealOnScroll(sel, x, y) {
+        gsap.utils.toArray(sel).forEach(function(el) {
+            if (el.closest('#hero')) return;
+            gsap.fromTo(el,
+                { x: x || 0, y: y || 0, opacity: 0 },
+                { x: 0, y: 0, opacity: 1, duration: 0.9, ease: 'power3.out',
+                  scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' } }
+            );
+        });
+    }
+    revealOnScroll('.fade-up', 0, 44);
+    revealOnScroll('.fade-left', -36, 0);
+    revealOnScroll('.fade-right', 36, 0);
+
+    /* ── Clip-path mask reveal for images ── */
+    gsap.utils.toArray('.will-reveal').forEach(function(el) {
+        gsap.fromTo(el,
+            { clipPath: 'inset(100% 0% 0% 0%)' },
+            { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.1, ease: 'power4.inOut',
+              scrollTrigger: { trigger: el, start: 'top 91%', toggleActions: 'play none none none' } }
+        );
+    });
+
+    /* ── Parallax drift on key images ── */
+    gsap.utils.toArray('.parallax-target').forEach(function(img) {
+        gsap.fromTo(img, { y: -24 }, { y: 24, ease: 'none',
+            scrollTrigger: { trigger: img.closest('.img-wrap') || img, start: 'top bottom', end: 'bottom top', scrub: true }
+        });
+    });
+
+    /* ── ARM tile stagger ── */
+    gsap.utils.toArray('.arm-tile').forEach(function(el, i) {
+        gsap.fromTo(el, { opacity: 0, y: 18 },
+            { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out', delay: (i % 5) * 0.06,
+              scrollTrigger: { trigger: el, start: 'top 93%', toggleActions: 'play none none none' } }
+        );
+    });
+
+    /* ── Team card stagger with scale ── */
+    gsap.utils.toArray('.team-card').forEach(function(el, i) {
+        gsap.fromTo(el, { opacity: 0, y: 28, scale: 0.96 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.75, ease: 'power3.out', delay: (i % 4) * 0.09,
+              scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' } }
+        );
+    });
+
+    /* ── Callout number pop ── */
+    gsap.utils.toArray('.callout-num').forEach(function(el) {
+        gsap.fromTo(el, { opacity: 0, scale: 0.8 },
+            { opacity: 1, scale: 1, duration: 0.55, ease: 'back.out(1.5)',
+              scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' } }
+        );
+    });
+
+    /* ── Lightbox ── */
+    const overlay = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const closeBtn = document.getElementById('lightboxClose');
+
+    function openLightbox(src, alt) {
+        lightboxImg.src = src;
+        lightboxImg.alt = alt || '';
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        setTimeout(() => { lightboxImg.src = ''; }, 300);
+    }
+
+    document.querySelectorAll('.img-wrap:not(.hero-poster .img-wrap)').forEach(function(wrap) {
+        const img = wrap.querySelector('img');
+        if (!img) return;
+        wrap.addEventListener('click', function() { openLightbox(img.src, img.alt); });
+    });
+
+    closeBtn.addEventListener('click', closeLightbox);
+    overlay.addEventListener('click', function(e) { if (e.target === overlay) closeLightbox(); });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLightbox(); });
+
+    /* ── Smooth nav active state ── */
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+    window.addEventListener('scroll', function() {
+        let current = '';
+        sections.forEach(function(section) {
+            const top = section.offsetTop - 120;
+            if (scrollY >= top) current = section.getAttribute('id');
+        });
+        navLinks.forEach(function(link) {
+            link.style.color = link.getAttribute('href') === '#' + current ? 'var(--text-hi)' : '';
+        });
+    });
+</script>
 
 </body>
 </html>
