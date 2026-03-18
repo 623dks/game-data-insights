@@ -7,7 +7,7 @@
     <meta name="description" content="What do 4 million Steam reviews, 266K screenshots, and three ML models reveal about game success?">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Instrument+Sans:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <style>
@@ -41,30 +41,35 @@
         .glow-1{top:-300px;left:-200px;width:800px;height:800px;background:radial-gradient(ellipse,rgba(91,156,255,0.04) 0%,transparent 70%)}
         .glow-2{bottom:-300px;right:-200px;width:700px;height:700px;background:radial-gradient(ellipse,rgba(93,224,245,0.025) 0%,transparent 70%)}
 
-        /* NAV */
-        nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,15,26,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
-        .nav-inner{max-width:var(--max-w);margin:0 auto;padding:0 clamp(1.25rem,4vw,2.5rem);height:56px;display:flex;align-items:center;justify-content:space-between}
-        .nav-brand{font-family:'Space Grotesk',sans-serif;font-size:0.88rem;font-weight:700;color:var(--text-hi)}
-        .nav-brand span{color:var(--accent);font-weight:500}
-        .nav-links{display:flex;gap:2rem}
-        .nav-link{font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);transition:color 0.25s;position:relative}
-        .nav-link::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--accent);transition:width 0.3s}
-        .nav-link:hover,.nav-link.active{color:var(--text-hi)}
+        /* NAV — Deep Shukla brand left, links beside */
+        nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,15,26,0.88);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:var(--max-w);margin:0 auto;padding:0 clamp(1.25rem,4vw,2.5rem);height:60px;display:flex;align-items:center;gap:2.5rem}
+        .nav-brand{font-family:'DM Serif Display',serif;font-size:1.15rem;color:var(--text-hi);white-space:nowrap;flex-shrink:0}
+        .nav-brand .brand-sub{font-family:'Instrument Sans',sans-serif;font-size:0.62rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);display:block;margin-top:-2px}
+        .nav-links{display:flex;gap:1.8rem;align-items:center}
+        .nav-link{font-family:'Instrument Sans',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);transition:color 0.25s,text-shadow 0.25s;position:relative}
+        .nav-link::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1.5px;background:var(--accent);transition:width 0.3s}
+        .nav-link:hover,.nav-link.active{color:var(--text-hi);text-shadow:0 0 12px rgba(91,156,255,0.35)}
+        .nav-link.active::after{width:100%}
         .nav-link:hover::after{width:100%}
-        @media(max-width:720px){.nav-links{display:none}}
+        @media(max-width:860px){.nav-links{display:none}}
 
-        /* HERO — compact, full-width, professional */
-        #hero{min-height:100vh;padding-top:56px;display:flex;align-items:center;position:relative;overflow:hidden}
-        .hero-content{width:100%;padding:clamp(2rem,6vh,5rem) 0;text-align:center;display:flex;flex-direction:column;align-items:center}
-        .hero-tag{display:inline-flex;align-items:center;gap:0.5rem;font-size:0.68rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(91,156,255,0.18);background:rgba(91,156,255,0.05);padding:0.4rem 1rem;border-radius:100px;margin-bottom:1.5rem}
-        .hero-title{margin-bottom:1.2rem;max-width:960px}
-        .hero-sub{font-size:1.1rem;color:var(--text);max-width:640px;line-height:1.75;margin-bottom:2rem}
+        /* HERO — centered, tight, with radial glow */
+        #hero{min-height:100vh;padding-top:60px;display:flex;align-items:center;position:relative;overflow:hidden}
+        #hero::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:800px;height:800px;background:radial-gradient(ellipse,rgba(91,141,238,0.1) 0%,rgba(91,141,238,0.03) 40%,transparent 70%);pointer-events:none;z-index:0}
+        .hero-content{width:100%;padding:clamp(1.5rem,4vh,3.5rem) 0;text-align:center;display:flex;flex-direction:column;align-items:center;position:relative;z-index:1}
+        .hero-emoji{font-size:4.5rem;margin-bottom:1.2rem;display:block;animation:heroFloat 3s ease-in-out infinite}
+        @keyframes heroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+        .hero-tag{display:inline-flex;align-items:center;gap:0.5rem;font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(91,156,255,0.18);background:rgba(91,156,255,0.05);padding:0.4rem 1.1rem;border-radius:100px;margin-bottom:1.8rem}
+        .hero-title{margin-bottom:0.6rem;max-width:860px;color:#5b8dee;letter-spacing:-0.04em}
+        .hero-title-sub{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.4rem,2.8vw,2.2rem);font-weight:600;color:var(--text-hi);margin-bottom:1.5rem;letter-spacing:-0.02em}
+        .hero-sub{font-size:1.05rem;color:var(--text);max-width:600px;line-height:1.75;margin-bottom:2rem}
         .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;max-width:700px}
         @media(max-width:640px){.stats-row{grid-template-columns:repeat(2,1fr)}}
-        .stat-box{background:var(--surface);padding:1.3rem 1.2rem;transition:background 0.3s}
+        .stat-box{background:var(--surface);padding:1.2rem 1rem;transition:background 0.3s}
         .stat-box:hover{background:var(--surface2)}
-        .stat-num{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.4rem,2.5vw,1.9rem);color:var(--text-hi);line-height:1;margin-bottom:0.25rem}
-        .stat-label{font-size:0.72rem;font-weight:500;color:var(--text-muted)}
+        .stat-num{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.3rem,2.5vw,1.8rem);color:var(--text-hi);line-height:1;margin-bottom:0.2rem}
+        .stat-label{font-size:0.7rem;font-weight:500;color:var(--text-muted)}
 
         /* Hero Poster — medium */
         .hero-poster{margin-top:2.5rem;max-width:700px;width:100%}
@@ -235,10 +240,10 @@
 
 <nav>
     <div class="nav-inner">
-        <div class="nav-brand">Video Game Industry <span>/ Data Mining</span></div>
+        <div class="nav-brand">Deep Shukla<span class="brand-sub">Video Game Data Analysis</span></div>
         <div class="nav-links">
             <a href="#intro" class="nav-link">Introduction</a>
-            <a href="#data" class="nav-link">Data</a>
+            <a href="#data" class="nav-link">Exploration</a>
             <a href="#models" class="nav-link">Models</a>
             <a href="#conclusions" class="nav-link">Conclusions</a>
             <a href="#team" class="nav-link">Team</a>
@@ -249,8 +254,10 @@
 <!-- HERO -->
 <section id="hero">
     <div class="container hero-content">
-        <div class="hero-tag fade-up">🎮 CU Boulder · CSCI 4502 · Data Mining</div>
-        <h1 class="hero-title fade-up">A Data Mining Approach for Advice on<br>Surviving the Videogame Industry</h1>
+        <div class="hero-emoji fade-up">🎮</div>
+        <h1 class="hero-title fade-up">Video Game Data Analysis</h1>
+        <div class="hero-title-sub fade-up">Data Mining Project</div>
+        <div class="hero-tag fade-up">CU Boulder · CSCI 4502 · Data Mining</div>
         <p class="hero-sub fade-up">What do 4 million Steam reviews, 266,000 screenshots, and three ML models tell us about why some games win and others disappear?</p>
         <div class="stats-row fade-up">
             <div class="stat-box"><div class="stat-num">23.7K</div><div class="stat-label">Steam apps analyzed</div></div>
